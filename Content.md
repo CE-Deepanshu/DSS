@@ -4,7 +4,7 @@
 
 ---
 
-## 📖 **Introduction**
+## 📖 [**Introduction**](Introduction.md)
 Fundamental principles, material properties, and limit state design philosophy as per IS 800:2007.
 
 ---
