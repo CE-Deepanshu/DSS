@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Steel Section Database</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f5f0;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: #fffef8;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding: 20px;
+            background-color: #f5f2e9;
+            border-bottom: 1px solid #e6e2d6;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2e7d32;
+        }
+        
+        select, input {
+            padding: 10px;
+            border: 1px solid #d1d9c7;
+            border-radius: 5px;
+            font-size: 14px;
+            background-color: white;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+        
+        .search-container {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .search-container input {
+            width: 100%;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            padding: 0 20px 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        th {
+            background-color: #4caf50;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e6e2d6;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f7f0;
+        }
+        
+        tr:hover {
+            background-color: #e8f5e9;
+        }
+        
+        .highlight {
+            background-color: #c8e6c9;
+            font-weight: 600;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .section-type {
+            font-weight: 600;
+            color: #2e7d32;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #f5f2e9;
+            color: #7f8c8d;
+            font-size: 14px;
+            border-top: 1px solid #e6e2d6;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .filter-group, .search-container {
+                width: 100%;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Indian Standard Steel Section Table</h1>
+            <p class="subtitle">Comprehensive database of Indian Standard Steel Sections </p>
+        </header>
+        
+        <div class="controls">
+            <div class="filter-group">
+                <label for="sectionType">Section Type</label>
+                <select id="sectionType">
+                    <option value="all">All Sections</option>
+                    <option value="I-Sections">I-Sections</option>
+                    <option value="C-Sections">C-Sections</option>
+                    <option value="T-Sections">T-Sections</option>
+                    <option value="Angle-Sections">Angle Sections</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="designation">Designation</label>
+                <select id="designation">
+                    <option value="all">All Designations</option>
+                </select>
+            </div>
+            
+            <div class="search-container">
+                <label for="searchInput">Search</label>
+                <input type="text" id="searchInput" placeholder="Search for any property value...">
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table id="steelTable">
+                <thead>
+                    <tr>
+                        <th>Section Type</th>
+                        <th>Designation</th>
+                        <th>Weight (kg/m)</th>
+                        <th>Area (cm²)</th>
+                        <th>Depth (mm)</th>
+                        <th>Flange Width (mm)</th>
+                        <th>Flange Thickness (mm)</th>
+                        <th>Web Thickness (mm)</th>
+                        <th>Ixx (cm⁴)</th>
+                        <th>Iyy (cm⁴)</th>
+                        <th>Zxx (cm³)</th>
+                        <th>Zyy (cm³)</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Table rows will be populated by JavaScript -->
+                </tbody>
+            </table>
+            <div id="noResults" class="no-results" style="display: none;">
+                No matching sections found. Try adjusting your search criteria.
+            </div>
+        </div>
+        
+        <footer>
+            <p>Indian Steel Section Database &copy; 2023 | Data based on Indian Standard steel tables</p>
+        </footer>
+    </div>
+
+    <script>
+        // Steel sections data structure
+        const steelSections = {
+            "I-Sections": {
+                "ISJB": [
+                    { designation: "ISJB 150", weight: 7.1, area: 9.01, depth: 150, flangeWidth: 50, flangeThickness: 4.6, webThickness: 3, ixx: 322.1, iyy: 9.2, zxx: 42.9, zyy: 3.7 },
+                    { designation: "ISJB 175", weight: 8.1, area: 10.28, depth: 175, flangeWidth: 50, flangeThickness: 4.8, webThickness: 3.2, ixx: 479.3, iyy: 9.7, zxx: 54.8, zyy: 3.9 },
+                    { designation: "ISJB 200", weight: 9.9, area: 12.64, depth: 200, flangeWidth: 60, flangeThickness: 5, webThickness: 3.4, ixx: 780.7, iyy: 17.3, zxx: 78.1, zyy: 5.8 },
+                    { designation: "ISJB 225", weight: 12.8, area: 16.28, depth: 225, flangeWidth: 80, flangeThickness: 5, webThickness: 3.7, ixx: 1308.5, iyy: 40.5, zxx: 116.3, zyy: 10.1 }
+                ],
+                "ISLB": [
+                    { designation: "ISLB 75", weight: 6.1, area: 7.71, depth: 75, flangeWidth: 50, flangeThickness: 5, webThickness: 3.7, ixx: 72.7, iyy: 10, zxx: 19.4, zyy: 4 },
+                    { designation: "ISLB 100", weight: 8, area: 10.21, depth: 100, flangeWidth: 50, flangeThickness: 6.4, webThickness: 4, ixx: 168, iyy: 12.7, zxx: 33.6, zyy: 5.1 },
+                    { designation: "ISLB 125", weight: 11.9, area: 15.12, depth: 125, flangeWidth: 75, flangeThickness: 6.5, webThickness: 4.4, ixx: 406.8, iyy: 43.4, zxx: 65.1, zyy: 11.6 },
+                    { designation: "ISLB 150", weight: 14.2, area: 18.08, depth: 150, flangeWidth: 80, flangeThickness: 6.8, webThickness: 4.8, ixx: 688.2, iyy: 55.2, zxx: 91.8, zyy: 13.8 },
+                    { designation: "ISLB 175", weight: 16.7, area: 21.3, depth: 175, flangeWidth: 90, flangeThickness: 6.9, webThickness: 5.1, ixx: 1096.2, iyy: 79.6, zxx: 125.3, zyy: 17.7 },
+                    { designation: "ISLB 200", weight: 19.8, area: 25.27, depth: 200, flangeWidth: 100, flangeThickness: 7.3, webThickness: 5.4, ixx: 1696.6, iyy: 115.4, zxx: 169.7, zyy: 23.1 },
+                    { designation: "ISLB 225", weight: 23.5, area: 29.92, depth: 225, flangeWidth: 100, flangeThickness: 8.6, webThickness: 5.8, ixx: 2501.9, iyy: 112.7, zxx: 222.4, zyy: 22.5 },
+                    { designation: "ISLB 250", weight: 27.9, area: 35.53, depth: 250, flangeWidth: 125, flangeThickness: 8.2, webThickness: 6.1, ixx: 3717.8, iyy: 193.4, zxx: 297.4, zyy: 30.9 },
+                    { designation: "ISLB 275", weight: 33, area: 42.02, depth: 275, flangeWidth: 140, flangeThickness: 8.8, webThickness: 6.4, ixx: 5375.3, iyy: 287, zxx: 392.4, zyy: 41 },
+                    { designation: "ISLB 300", weight: 37.7, area: 48.08, depth: 300, flangeWidth: 150, flangeThickness: 9.4, webThickness: 6.7, ixx: 7332.9, iyy: 376.2, zxx: 488.9, zyy: 50.2 },
+                    { designation: "ISLB 325", weight: 43.1, area: 54.9, depth: 325, flangeWidth: 165, flangeThickness: 9.8, webThickness: 7, ixx: 9874.6, iyy: 510.8, zxx: 607.7, zyy: 61.9 },
+                    { designation: "ISLB 350", weight: 49.5, area: 63.01, depth: 350, flangeWidth: 165, flangeThickness: 11.4, webThickness: 7.4, ixx: 13158.3, iyy: 631.9, zxx: 751.9, zyy: 76.6 },
+                    { designation: "ISLB 400", weight: 56.9, area: 72.43, depth: 400, flangeWidth: 165, flangeThickness: 12.5, webThickness: 8, ixx: 19306.3, iyy: 716.4, zxx: 965.3, zyy: 86.8 },
+                    { designation: "ISLB 450", weight: 65.3, area: 83.14, depth: 450, flangeWidth: 170, flangeThickness: 13.4, webThickness: 8.6, ixx: 27536.1, iyy: 853, zxx: 1223.8, zyy: 100.4 },
+                    { designation: "ISLB 500", weight: 75, area: 95.5, depth: 500, flangeWidth: 180, flangeThickness: 14.1, webThickness: 9.2, ixx: 38579, iyy: 1063.9, zxx: 1543.2, zyy: 118.2 },
+                    { designation: "ISLB 550", weight: 86.3, area: 109.97, depth: 550, flangeWidth: 190, flangeThickness: 15, webThickness: 9.9, ixx: 53161.6, iyy: 1335.1, zxx: 1933.2, zyy: 140.5 },
+                    { designation: "ISLB 600", weight: 99.5, area: 126.69, depth: 600, flangeWidth: 210, flangeThickness: 15.5, webThickness: 10.5, ixx: 72867.6, iyy: 1821.9, zxx: 2428.9, zyy: 173.5 }
+                ],
+                "ISMB": [
+                    { designation: "ISMB 100", weight: 11.5, area: 14.6, depth: 100, flangeWidth: 75, flangeThickness: 7.2, webThickness: 4, ixx: 257.5, iyy: 40.8, zxx: 51.5, zyy: 10.9 },
+                    { designation: "ISMB 125", weight: 13, area: 16.6, depth: 125, flangeWidth: 75, flangeThickness: 7.6, webThickness: 4.4, ixx: 449, iyy: 43.7, zxx: 71.8, zyy: 11.7 },
+                    { designation: "ISMB 150", weight: 14.9, area: 19, depth: 150, flangeWidth: 80, flangeThickness: 7.6, webThickness: 4.8, ixx: 726.4, iyy: 52.6, zxx: 96.9, zyy: 13.1 },
+                    { designation: "ISMB 175", weight: 19.3, area: 24.62, depth: 175, flangeWidth: 90, flangeThickness: 8.6, webThickness: 5.5, ixx: 1272, iyy: 85, zxx: 145.4, zyy: 18.9 },
+                    { designation: "ISMB 200", weight: 25.4, area: 32.33, depth: 200, flangeWidth: 100, flangeThickness: 10.8, webThickness: 5.7, ixx: 2235.4, iyy: 150, zxx: 223.5, zyy: 30 },
+                    { designation: "ISMB 225", weight: 31.2, area: 39.72, depth: 225, flangeWidth: 110, flangeThickness: 11.8, webThickness: 6.5, ixx: 3441.8, iyy: 218.3, zxx: 305.9, zyy: 39.7 },
+                    { designation: "ISMB 250", weight: 37.3, area: 47.55, depth: 250, flangeWidth: 125, flangeThickness: 12.5, webThickness: 6.9, ixx: 5131.6, iyy: 334.5, zxx: 410.5, zyy: 53.5 },
+                    { designation: "ISMB 300", weight: 44.2, area: 56.26, depth: 300, flangeWidth: 140, flangeThickness: 12.4, webThickness: 7.5, ixx: 8603.6, iyy: 453.9, zxx: 573.6, zyy: 64.8 },
+                    { designation: "ISMB 350", weight: 52.4, area: 66.71, depth: 350, flangeWidth: 140, flangeThickness: 14.2, webThickness: 8.1, ixx: 13630.3, iyy: 537.7, zxx: 778.9, zyy: 76.8 },
+                    { designation: "ISMB 400", weight: 61.6, area: 78.46, depth: 400, flangeWidth: 140, flangeThickness: 16, webThickness: 8.9, ixx: 20458.4, iyy: 422.1, zxx: 1022.9, zyy: 88.9 },
+                    { designation: "ISMB 450", weight: 72.4, area: 92.27, depth: 450, flangeWidth: 150, flangeThickness: 17.4, webThickness: 9.4, ixx: 30390.8, iyy: 834, zxx: 1350.7, zyy: 111.2 },
+                    { designation: "ISMB 500", weight: 86.9, area: 110.74, depth: 500, flangeWidth: 180, flangeThickness: 17.2, webThickness: 10.2, ixx: 45218.3, iyy: 1369.8, zxx: 1808.7, zyy: 152.2 },
+                    { designation: "ISMB 550", weight: 103.7, area: 132.11, depth: 550, flangeWidth: 190, flangeThickness: 19.3, webThickness: 11.2, ixx: 64893.6, iyy: 1833.8, zxx: 2359.8, zyy: 193 },
+                    { designation: "ISMB 600", weight: 122.6, area: 156.21, depth: 600, flangeWidth: 210, flangeThickness: 20.8, webThickness: 12, ixx: 91813, iyy: 2651, zxx: 3060.4, zyy: 252.5 }
+                ],
+                "ISWB": [
+                    { designation: "ISWB 150", weight: 17, area: 21.67, depth: 150, flangeWidth: 100, flangeThickness: 7, webThickness: 5.4, ixx: 839.1, iyy: 94.8, zxx: 111.9, zyy: 19 },
+                    { designation: "ISWB 175", weight: 22.1, area: 28.11, depth: 175, flangeWidth: 125, flangeThickness: 7.4, webThickness: 5.8, ixx: 1509.4, iyy: 188.6, zxx: 172.5, zyy: 30.2 },
+                    { designation: "ISWB 200", weight: 28.8, area: 36.71, depth: 200, flangeWidth: 140, flangeThickness: 9, webThickness: 6.1, ixx: 2624.5, iyy: 328.8, zxx: 262.5, zyy: 47 },
+                    { designation: "ISWB 225", weight: 33.9, area: 43.24, depth: 225, flangeWidth: 150, flangeThickness: 9.9, webThickness: 6.4, ixx: 3920.5, iyy: 448.6, zxx: 348.5, zyy: 59.8 },
+                    { designation: "ISWB 250", weight: 40.9, area: 52.05, depth: 250, flangeWidth: 200, flangeThickness: 9, webThickness: 6.7, ixx: 5943.1, iyy: 857.5, zxx: 475.4, zyy: 85.7 },
+                    { designation: "ISWB 300", weight: 48.1, area: 61.33, depth: 300, flangeWidth: 200, flangeThickness: 10, webThickness: 7.4, ixx: 9821.6, iyy: 990.1, zxx: 654.8, zyy: 99 },
+                    { designation: "ISWB 350", weight: 56.9, area: 72.5, depth: 350, flangeWidth: 200, flangeThickness: 11.4, webThickness: 8, ixx: 15521.7, iyy: 1175.9, zxx: 887, zyy: 117.6 },
+                    { designation: "ISWB 400", weight: 66.7, area: 85.01, depth: 400, flangeWidth: 200, flangeThickness: 13, webThickness: 8.6, ixx: 23426.7, iyy: 1388, zxx: 1711.3, zyy: 138.8 },
+                    { designation: "ISWB 450", weight: 79.4, area: 101.15, depth: 450, flangeWidth: 200, flangeThickness: 15.4, webThickness: 9.2, ixx: 35057.6, iyy: 1706.7, zxx: 1558.1, zyy: 170.7 },
+                    { designation: "ISWB 500", weight: 95.2, area: 121.22, depth: 500, flangeWidth: 250, flangeThickness: 14.7, webThickness: 9.9, ixx: 52290.9, iyy: 2987.8, zxx: 2091.6, zyy: 239 },
+                    { designation: "ISWB 550", weight: 112.5, area: 143.34, depth: 550, flangeWidth: 250, flangeThickness: 17.6, webThickness: 10.5, ixx: 74906.1, iyy: 3740.6, zxx: 2723.9, zyy: 299.2 },
+                    { designation: "ISWB 600", weight: 133.7, area: 170.38, depth: 600, flangeWidth: 250, flangeThickness: 21.3, webThickness: 11.2, ixx: 106198.5, iyy: 4702.5, zxx: 3540, zyy: 376.2 }
+                ],
+                "ISHB": [
+                    { designation: "ISHB 150(1)", weight: 27.1, area: 34.48, depth: 150, flangeWidth: 150, flangeThickness: 9, webThickness: 5.4, ixx: 1455.6, iyy: 431.7, zxx: 194.1, zyy: 57.6 },
+                    { designation: "ISHB 150(2)", weight: 30.6, area: 38.98, depth: 150, flangeWidth: 150, flangeThickness: 9, webThickness: 8.4, ixx: 1540, iyy: 460.3, zxx: 205.3, zyy: 60.2 },
+                    { designation: "ISHB 150(3)", weight: 34.6, area: 44.08, depth: 150, flangeWidth: 150, flangeThickness: 9, webThickness: 11.8, ixx: 1635.6, iyy: 494.9, zxx: 218.1, zyy: 63.2 },
+                    { designation: "ISHB 200(1)", weight: 37.3, area: 47.54, depth: 200, flangeWidth: 200, flangeThickness: 9, webThickness: 6.1, ixx: 3608.4, iyy: 967.1, zxx: 360.8, zyy: 96.7 },
+                    { designation: "ISHB 200(2)", weight: 40, area: 50.94, depth: 200, flangeWidth: 200, flangeThickness: 9, webThickness: 7.8, ixx: 3721.8, iyy: 994.6, zxx: 372.2, zyy: 98.6 },
+                    { designation: "ISHB 225(1)", weight: 43.1, area: 54.94, depth: 225, flangeWidth: 225, flangeThickness: 9.1, webThickness: 6.5, ixx: 5279.5, iyy: 1353.8, zxx: 469.3, zyy: 120.3 },
+                    { designation: "ISHB 225(2)", weight: 46.8, area: 59.66, depth: 225, flangeWidth: 225, flangeThickness: 9.1, webThickness: 8.6, ixx: 5478.8, iyy: 1396.6, zxx: 487, zyy: 123 },
+                    { designation: "ISHB 250(1)", weight: 51, area: 64.96, depth: 250, flangeWidth: 250, flangeThickness: 9.7, webThickness: 6.9, ixx: 7736.5, iyy: 1961.3, zxx: 618.9, zyy: 156.9 },
+                    { designation: "ISHB 250(2)", weight: 54.7, area: 69.71, depth: 250, flangeWidth: 250, flangeThickness: 9.7, webThickness: 8.8, ixx: 7983.9, iyy: 2011.7, zxx: 638.7, zyy: 159.7 },
+                    { designation: "ISHB 300(1)", weight: 58.8, area: 74.85, depth: 300, flangeWidth: 250, flangeThickness: 10.6, webThickness: 7.6, ixx: 12345.2, iyy: 2193.6, zxx: 836.3, zyy: 175.5 },
+                    { designation: "ISHB 300(2)", weight: 63, area: 80.25, depth: 300, flangeWidth: 250, flangeThickness: 10.6, webThickness: 9.4, ixx: 12950.2, iyy: 2246.7, zxx: 863.3, zyy: 178.4 },
+                    { designation: "ISHB 350(1)", weight: 67.4, area: 85.91, depth: 350, flangeWidth: 250, flangeThickness: 11.6, webThickness: 8.3, ixx: 19159.7, iyy: 2451.4, zxx: 1094.8, zyy: 196.1 },
+                    { designation: "ISHB 350(2)", weight: 72.4, area: 92.21, depth: 350, flangeWidth: 250, flangeThickness: 11.6, webThickness: 10.1, ixx: 19802.8, iyy: 2510.5, zxx: 1131.6, zyy: 199.4 },
+                    { designation: "ISHB 400(1)", weight: 77.4, area: 98.66, depth: 400, flangeWidth: 250, flangeThickness: 12.7, webThickness: 9.1, ixx: 28083.5, iyy: 2728.3, zxx: 1404.2, zyy: 218.3 },
+                    { designation: "ISHB 400(2)", weight: 82.2, area: 104.66, depth: 400, flangeWidth: 250, flangeThickness: 12.7, webThickness: 10.6, ixx: 28823.5, iyy: 2783, zxx: 1444.2, zyy: 221.3 },
+                    { designation: "ISHB 450(1)", weight: 87.2, area: 111.14, depth: 450, flangeWidth: 250, flangeThickness: 13.7, webThickness: 9.8, ixx: 39210.8, iyy: 2985.2, zxx: 1742.7, zyy: 238.8 },
+                    { designation: "ISHB 450(2)", weight: 92.5, area: 117.89, depth: 450, flangeWidth: 250, flangeThickness: 13.7, webThickness: 11.3, ixx: 40349.9, iyy: 3045, zxx: 1793.3, zyy: 242.1 }
+                ]
+            },
+            "C-Sections": {
+                "ISJC": [
+                    { designation: "ISJC 100", weight: 5.8, area: 7.41, depth: 100, flangeWidth: 45, flangeThickness: 5.1, webThickness: 3, ixx: 123.8, iyy: 14.9, zxx: 24.8, zyy: 4.8 },
+                    { designation: "ISJC 125", weight: 7.9, area: 10.07, depth: 125, flangeWidth: 50, flangeThickness: 6.6, webThickness: 3, ixx: 270, iyy: 25.7, zxx: 43.2, zyy: 7.6 },
+                    { designation: "ISJC 150", weight: 9.9, area: 12.65, depth: 150, flangeWidth: 55, flangeThickness: 6.9, webThickness: 3.6, ixx: 471.1, iyy: 37.9, zxx: 62.8, zyy: 9.9 },
+                    { designation: "ISJC 175", weight: 11.2, area: 14.24, depth: 175, flangeWidth: 60, flangeThickness: 6.9, webThickness: 3.6, ixx: 719.9, iyy: 50.5, zxx: 82.3, zyy: 11.9 },
+                    { designation: "ISJC 200", weight: 13.9, area: 17.77, depth: 200, flangeWidth: 70, flangeThickness: 7.1, webThickness: 4.1, ixx: 1161.2, iyy: 84.2, zxx: 116.1, zyy: 16.7 }
+                ],
+                "ISLC": [
+                    { designation: "ISLC 75", weight: 5.7, area: 7.26, depth: 75, flangeWidth: 40, flangeThickness: 6, webThickness: 3.7, ixx: 66.1, iyy: 11.5, zxx: 17.6, zyy: 4.3 },
+                    { designation: "ISLC 100", weight: 7.9, area: 10.02, depth: 100, flangeWidth: 50, flangeThickness: 6.4, webThickness: 4, ixx: 164.7, iyy: 24.8, zxx: 32.9, zyy: 7.3 },
+                    { designation: "ISLC 125", weight: 10.7, area: 13.67, depth: 125, flangeWidth: 65, flangeThickness: 6.6, webThickness: 4.4, ixx: 356.8, iyy: 57.2, zxx: 57.1, zyy: 12.8 },
+                    { designation: "ISLC 150", weight: 14.4, area: 18.36, depth: 150, flangeWidth: 75, flangeThickness: 7.8, webThickness: 4.8, ixx: 697.2, iyy: 103.2, zxx: 93, zyy: 20.2 },
+                    { designation: "ISLC 175", weight: 17.6, area: 22.4, depth: 175, flangeWidth: 75, flangeThickness: 9.5, webThickness: 5.1, ixx: 1148.4, iyy: 126.5, zxx: 131.3, zyy: 24.8 },
+                    { designation: "ISLC 200", weight: 20.6, area: 26.22, depth: 200, flangeWidth: 75, flangeThickness: 10.8, webThickness: 5.5, ixx: 1725.5, iyy: 146.9, zxx: 172.6, zyy: 28.5 },
+                    { designation: "ISLC 225", weight: 24, area: 30.53, depth: 225, flangeWidth: 90, flangeThickness: 10.2, webThickness: 5.8, ixx: 2547.9, iyy: 209.5, zxx: 226.5, zyy: 32 },
+                    { designation: "ISLC 250", weight: 28, area: 35.65, depth: 250, flangeWidth: 100, flangeThickness: 10.7, webThickness: 6.1, ixx: 3687.9, iyy: 298.4, zxx: 295, zyy: 40.9 },
+                    { designation: "ISLC 300", weight: 33.1, area: 42.11, depth: 300, flangeWidth: 100, flangeThickness: 11.6, webThickness: 6.7, ixx: 6047.9, iyy: 346, zxx: 403.2, zyy: 46.4 },
+                    { designation: "ISLC 350", weight: 38.8, area: 49.47, depth: 350, flangeWidth: 100, flangeThickness: 12.5, webThickness: 7.4, ixx: 9312.6, iyy: 394.6, zxx: 532.1, zyy: 52 },
+                    { designation: "ISLC 400", weight: 45.7, area: 58.25, depth: 400, flangeWidth: 100, flangeThickness: 14, webThickness: 8, ixx: 13989.5, iyy: 460.4, zxx: 699.5, zyy: 60.2 }
+                ],
+                "ISMC": [
+                    { designation: "ISMC 75", weight: 6.8, area: 8.67, depth: 75, flangeWidth: 40, flangeThickness: 7.3, webThickness: 4.4, ixx: 76, iyy: 12.6, zxx: 20.3, zyy: 4.7 },
+                    { designation: "ISMC 100", weight: 9.2, area: 11.7, depth: 100, flangeWidth: 50, flangeThickness: 7.5, webThickness: 4.7, ixx: 186.7, iyy: 25.9, zxx: 37.3, zyy: 7.5 },
+                    { designation: "ISMC 125", weight: 12.7, area: 16.19, depth: 125, flangeWidth: 65, flangeThickness: 8.1, webThickness: 5, ixx: 416.4, iyy: 59.9, zxx: 66.6, zyy: 13.1 },
+                    { designation: "ISMC 150", weight: 16.4, area: 20.88, depth: 150, flangeWidth: 75, flangeThickness: 9, webThickness: 5.4, ixx: 779.4, iyy: 102.3, zxx: 103.9, zyy: 19.4 },
+                    { designation: "ISMC 175", weight: 19.1, area: 24.38, depth: 175, flangeWidth: 75, flangeThickness: 10.2, webThickness: 5.7, ixx: 1223.3, iyy: 121, zxx: 139.8, zyy: 22.8 },
+                    { designation: "ISMC 200", weight: 22.1, area: 28.21, depth: 200, flangeWidth: 75, flangeThickness: 11.4, webThickness: 6.1, ixx: 1819.3, iyy: 140.4, zxx: 181.9, zyy: 26.3 },
+                    { designation: "ISMC 225", weight: 25.9, area: 33.01, depth: 225, flangeWidth: 80, flangeThickness: 12.4, webThickness: 6.4, ixx: 2694.6, iyy: 187.2, zxx: 239.5, zyy: 32.8 },
+                    { designation: "ISMC 250", weight: 30.4, area: 38.67, depth: 250, flangeWidth: 80, flangeThickness: 14.1, webThickness: 7.1, ixx: 3816.8, iyy: 219.1, zxx: 305.3, zyy: 38.4 },
+                    { designation: "ISMC 300", weight: 35.8, area: 45.64, depth: 300, flangeWidth: 90, flangeThickness: 13.6, webThickness: 7.6, ixx: 6362.8, iyy: 310.8, zxx: 424.2, zyy: 46.8 },
+                    { designation: "ISMC 350", weight: 42.1, area: 53.66, depth: 350, flangeWidth: 100, flangeThickness: 13.5, webThickness: 8.1, ixx: 10008, iyy: 430.6, zxx: 571.9, zyy: 51 },
+                    { designation: "ISMC 400", weight: 49.4, area: 62.93, depth: 400, flangeWidth: 100, flangeThickness: 15.3, webThickness: 8.6, ixx: 15082.8, iyy: 504.8, zxx: 754.1, zyy: 66.6 }
+                ]
+            },
+            "T-Sections": {
+                "ISNT": [
+                    { designation: "ISNT 20", weight: 0.9, area: 1.13, depth: 20, flangeWidth: 20, flangeThickness: 3, webThickness: 3, ixx: 0.4, iyy: 0.2, zxx: 0.3, zyy: 0.2 },
+                    { designation: "ISNT 30", weight: 1.4, area: 1.75, depth: 30, flangeWidth: 30, flangeThickness: 3, webThickness: 3, ixx: 1.4, iyy: 0.6, zxx: 0.6, zyy: 0.4 },
+                    { designation: "ISNT 40", weight: 3.5, area: 4.48, depth: 40, flangeWidth: 40, flangeThickness: 6, webThickness: 6, ixx: 6.3, iyy: 3, zxx: 2.2, zyy: 1.5 },
+                    { designation: "ISNT 50", weight: 4.5, area: 5.7, depth: 50, flangeWidth: 50, flangeThickness: 6, webThickness: 6, ixx: 12.7, iyy: 5.9, zxx: 3.6, zyy: 2.4 },
+                    { designation: "ISNT 60", weight: 5.4, area: 6.9, depth: 60, flangeWidth: 60, flangeThickness: 6, webThickness: 6, ixx: 22.5, iyy: 10.1, zxx: 5.2, zyy: 3.4 },
+                    { designation: "ISNT 80", weight: 9.6, area: 12.25, depth: 80, flangeWidth: 80, flangeThickness: 8, webThickness: 8, ixx: 71.2, iyy: 32.3, zxx: 12.3, zyy: 8.1 },
+                    { designation: "ISNT 100", weight: 15, area: 19.1, depth: 100, flangeWidth: 100, flangeThickness: 10, webThickness: 10, ixx: 173.8, iyy: 79.9, zxx: 24.1, zyy: 16 },
+                    { designation: "ISNT 150", weight: 22.8, area: 29.08, depth: 150, flangeWidth: 150, flangeThickness: 10, webThickness: 10, ixx: 603.8, iyy: 267.5, zxx: 54.6, zyy: 35.7 }
+                ],
+                "ISHT": [
+                    { designation: "ISHT 75", weight: 15.3, area: 19.49, depth: 75, flangeWidth: 150, flangeThickness: 9, webThickness: 8.4, ixx: 96.2, iyy: 230.2, zxx: 16.4, zyy: 30.1 },
+                    { designation: "ISHT 100", weight: 20, area: 25.47, depth: 100, flangeWidth: 200, flangeThickness: 9, webThickness: 7.8, ixx: 193.8, iyy: 497.3, zxx: 24, zyy: 49.3 },
+                    { designation: "ISHT 125", weight: 27.4, area: 34.85, depth: 125, flangeWidth: 250, flangeThickness: 9.7, webThickness: 8.8, ixx: 415.4, iyy: 1005.8, zxx: 41, zyy: 79.9 },
+                    { designation: "ISHT 150", weight: 29.4, area: 37.42, depth: 150, flangeWidth: 250, flangeThickness: 10.6, webThickness: 7.6, ixx: 573.7, iyy: 1096.8, zxx: 46.5, zyy: 87.7 }
+                ],
+                "ISST": [
+                    { designation: "ISST 100", weight: 8.1, area: 10.37, depth: 100, flangeWidth: 50, flangeThickness: 10, webThickness: 5.8, ixx: 99, iyy: 9.6, zxx: 14.2, zyy: 3.8 },
+                    { designation: "ISST 150", weight: 15.7, area: 19.96, depth: 150, flangeWidth: 75, flangeThickness: 11.6, webThickness: 8, ixx: 450.2, iyy: 37, zxx: 43.9, zyy: 9.9 },
+                    { designation: "ISST 200", weight: 28.4, area: 36.22, depth: 200, flangeWidth: 165, flangeThickness: 12.5, webThickness: 8, ixx: 1267.8, iyy: 358.2, zxx: 83.3, zyy: 43.4 },
+                    { designation: "ISST 250", weight: 37.5, area: 47.75, depth: 250, flangeWidth: 180, flangeThickness: 14.1, webThickness: 9.2, ixx: 2774.4, iyy: 532, zxx: 149.2, zyy: 59.1 }
+                ],
+                "ISLT": [
+                    { designation: "ISLT 50", weight: 4, area: 5.11, depth: 50, flangeWidth: 50, flangeThickness: 6.4, webThickness: 4, ixx: 9.9, iyy: 6.4, zxx: 2.6, zyy: 2.5 },
+                    { designation: "ISLT 75", weight: 7.1, area: 9.04, depth: 75, flangeWidth: 80, flangeThickness: 6.8, webThickness: 4.8, ixx: 41.9, iyy: 27.6, zxx: 7.2, zyy: 6.9 },
+                    { designation: "ISLT 100", weight: 12.7, area: 16.16, depth: 100, flangeWidth: 100, flangeThickness: 10.8, webThickness: 5.7, ixx: 116.6, iyy: 75, zxx: 14.8, zyy: 15 }
+                ],
+                "ISJT": [
+                    { designation: "ISJT 75", weight: 3.5, area: 4.5, depth: 75, flangeWidth: 50, flangeThickness: 4.6, webThickness: 3, ixx: 24.8, iyy: 4.6, zxx: 4.5, zyy: 1.8 },
+                    { designation: "ISJT 87.5", weight: 4, area: 5.14, depth: 87.5, flangeWidth: 50, flangeThickness: 4.8, webThickness: 3.2, ixx: 39, iyy: 4.8, zxx: 6.2, zyy: 1.9 },
+                    { designation: "ISJT 100", weight: 5, area: 6.32, depth: 100, flangeWidth: 60, flangeThickness: 5, webThickness: 3.4, ixx: 63.5, iyy: 8.6, zxx: 8.8, zyy: 2.9 },
+                    { designation: "ISJT 112.5", weight: 6.4, area: 8.14, depth: 112.5, flangeWidth: 80, flangeThickness: 5, webThickness: 3.7, ixx: 101.6, iyy: 20.2, zxx: 12.3, zyy: 5.1 }
+                ]
+            },
+            "Angle-Sections": {
+                "Equal Angles": [
+                    { designation: "ISA 20203", weight: 0.9, area: 1.12, depth: 20, flangeWidth: 20, flangeThickness: 3, webThickness: 3, ixx: 0.4, iyy: 0.4, zxx: 0.3, zyy: 0.3 },
+                    { designation: "ISA 20204", weight: 1.1, area: 1.45, depth: 20, flangeWidth: 20, flangeThickness: 4, webThickness: 4, ixx: 0.5, iyy: 0.5, zxx: 0.4, zyy: 0.4 },
+                    { designation: "ISA 25253", weight: 1.1, area: 1.41, depth: 25, flangeWidth: 25, flangeThickness: 3, webThickness: 3, ixx: 0.8, iyy: 0.8, zxx: 0.4, zyy: 0.4 },
+                    { designation: "ISA 25254", weight: 1.4, area: 1.84, depth: 25, flangeWidth: 25, flangeThickness: 4, webThickness: 4, ixx: 1, iyy: 1, zxx: 0.6, zyy: 0.6 },
+                    { designation: "ISA 25255", weight: 1.8, area: 2.25, depth: 25, flangeWidth: 25, flangeThickness: 5, webThickness: 5, ixx: 1.2, iyy: 1.2, zxx: 0.7, zyy: 0.7 },
+                    { designation: "ISA 30303", weight: 1.4, area: 1.73, depth: 30, flangeWidth: 30, flangeThickness: 3, webThickness: 3, ixx: 1.4, iyy: 1.4, zxx: 0.6, zyy: 0.6 },
+                    { designation: "ISA 30304", weight: 1.8, area: 2.26, depth: 30, flangeWidth: 30, flangeThickness: 4, webThickness: 4, ixx: 1.8, iyy: 1.8, zxx: 0.8, zyy: 0.8 },
+                    { designation: "ISA 30305", weight: 2.2, area: 2.77, depth: 30, flangeWidth: 30, flangeThickness: 5, webThickness: 5, ixx: 2.1, iyy: 2.1, zxx: 1, zyy: 1 },
+                    { designation: "ISA 35353", weight: 1.6, area: 2.03, depth: 35, flangeWidth: 35, flangeThickness: 3, webThickness: 3, ixx: 2.3, iyy: 2.3, zxx: 0.9, zyy: 0.9 },
+                    { designation: "ISA 35354", weight: 2.1, area: 2.66, depth: 35, flangeWidth: 35, flangeThickness: 4, webThickness: 4, ixx: 2.9, iyy: 2.9, zxx: 1.2, zyy: 1.2 },
+                    { designation: "ISA 35355", weight: 2.6, area: 3.27, depth: 35, flangeWidth: 35, flangeThickness: 5, webThickness: 5, ixx: 3.5, iyy: 3.5, zxx: 1.4, zyy: 1.4 },
+                    { designation: "ISA 35356", weight: 3, area: 3.86, depth: 35, flangeWidth: 35, flangeThickness: 6, webThickness: 6, ixx: 4.1, iyy: 4.1, zxx: 1.7, zyy: 1.7 }
+                ],
+                "Unequal Angles": [
+                    { designation: "ISA 30203", weight: 1.1, area: 1.41, depth: 30, flangeWidth: 20, flangeThickness: 3, webThickness: 3, ixx: 1.2, iyy: 0.4, zxx: 0.6, zyy: 0.3 },
+                    { designation: "ISA 30204", weight: 1.4, area: 1.84, depth: 30, flangeWidth: 20, flangeThickness: 4, webThickness: 4, ixx: 1.5, iyy: 0.5, zxx: 0.8, zyy: 0.4 },
+                    { designation: "ISA 30205", weight: 1.8, area: 2.25, depth: 30, flangeWidth: 20, flangeThickness: 5, webThickness: 5, ixx: 1.9, iyy: 0.6, zxx: 1, zyy: 0.4 },
+                    { designation: "ISA 40253", weight: 1.5, area: 1.88, depth: 40, flangeWidth: 25, flangeThickness: 3, webThickness: 3, ixx: 3, iyy: 0.9, zxx: 1.1, zyy: 0.5 },
+                    { designation: "ISA 40254", weight: 1.9, area: 2.46, depth: 40, flangeWidth: 25, flangeThickness: 4, webThickness: 4, ixx: 3.8, iyy: 1.1, zxx: 1.4, zyy: 0.6 },
+                    { designation: "ISA 40255", weight: 2.4, area: 3.02, depth: 40, flangeWidth: 25, flangeThickness: 5, webThickness: 5, ixx: 4.6, iyy: 1.4, zxx: 1.8, zyy: 0.7 },
+                    { designation: "ISA 40256", weight: 2.8, area: 3.56, depth: 40, flangeWidth: 25, flangeThickness: 6, webThickness: 6, ixx: 5.4, iyy: 1.6, zxx: 2.1, zyy: 0.9 },
+                    { designation: "ISA 45303", weight: 1.7, area: 2.18, depth: 45, flangeWidth: 30, flangeThickness: 3, webThickness: 3, ixx: 4.4, iyy: 1.5, zxx: 1.4, zyy: 0.7 },
+                    { designation: "ISA 45304", weight: 2.2, area: 2.86, depth: 45, flangeWidth: 30, flangeThickness: 4, webThickness: 4, ixx: 5.7, iyy: 2, zxx: 1.9, zyy: 0.9 },
+                    { designation: "ISA 45305", weight: 2.8, area: 3.52, depth: 45, flangeWidth: 30, flangeThickness: 5, webThickness: 5, ixx: 6.9, iyy: 2.4, zxx: 2.3, zyy: 1.1 },
+                    { designation: "ISA 45306", weight: 3.3, area: 4.16, depth: 45, flangeWidth: 30, flangeThickness: 6, webThickness: 6, ixx: 8, iyy: 2.8, zxx: 2.7, zyy: 1.3 }
+                ]
+            }
+        };
+
+        // DOM elements
+        const sectionTypeSelect = document.getElementById('sectionType');
+        const designationSelect = document.getElementById('designation');
+        const searchInput = document.getElementById('searchInput');
+        const tableBody = document.getElementById('tableBody');
+        const noResults = document.getElementById('noResults');
+
+        // Populate designation dropdown based on section type
+        function populateDesignations() {
+            const sectionType = sectionTypeSelect.value;
+            designationSelect.innerHTML = '<option value="all">All Designations</option>';
+            
+            if (sectionType !== 'all') {
+                const designations = Object.keys(steelSections[sectionType]);
+                designations.forEach(designation => {
+                    const option = document.createElement('option');
+                    option.value = designation;
+                    option.textContent = designation;
+                    designationSelect.appendChild(option);
+                });
+            }
+            
+            renderTable();
+        }
+
+        // Highlight text in search results
+        function highlightText(text, searchTerm) {
+            if (!searchTerm) return text;
+            
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.toString().replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        // Render the table with filtered data
+        function renderTable() {
+            const sectionType = sectionTypeSelect.value;
+            const designation = designationSelect.value;
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            tableBody.innerHTML = '';
+            let hasResults = false;
+            
+            // Iterate through all sections
+            for (const [type, designations] of Object.entries(steelSections)) {
+                // Skip if section type filter is applied and doesn't match
+                if (sectionType !== 'all' && type !== sectionType) continue;
+                
+                for (const [desig, sections] of Object.entries(designations)) {
+                    // Skip if designation filter is applied and doesn't match
+                    if (designation !== 'all' && desig !== designation) continue;
+                    
+                    sections.forEach(section => {
+                        // Check if section matches search term
+                        const matchesSearch = !searchTerm || 
+                            Object.values(section).some(value => 
+                                value.toString().toLowerCase().includes(searchTerm)
+                            );
+                        
+                        if (matchesSearch) {
+                            hasResults = true;
+                            const row = document.createElement('tr');
+                            
+                            // Create cells with highlighted text if search term exists
+                            row.innerHTML = `
+                                <td class="section-type">${type}</td>
+                                <td>${highlightText(section.designation, searchTerm)}</td>
+                                <td>${highlightText(section.weight, searchTerm)}</td>
+                                <td>${highlightText(section.area, searchTerm)}</td>
+                                <td>${highlightText(section.depth, searchTerm)}</td>
+                                <td>${highlightText(section.flangeWidth, searchTerm)}</td>
+                                <td>${highlightText(section.flangeThickness, searchTerm)}</td>
+                                <td>${highlightText(section.webThickness, searchTerm)}</td>
+                                <td>${highlightText(section.ixx, searchTerm)}</td>
+                                <td>${highlightText(section.iyy, searchTerm)}</td>
+                                <td>${highlightText(section.zxx, searchTerm)}</td>
+                                <td>${highlightText(section.zyy, searchTerm)}</td>
+                            `;
+                            
+                            tableBody.appendChild(row);
+                        }
+                    });
+                }
+            }
+            
+            // Show no results message if needed
+            if (hasResults) {
+                noResults.style.display = 'none';
+            } else {
+                noResults.style.display = 'block';
+            }
+        }
+
+        // Event listeners
+        sectionTypeSelect.addEventListener('change', populateDesignations);
+        designationSelect.addEventListener('change', renderTable);
+        searchInput.addEventListener('input', renderTable);
+
+        // Initialize the page
+        populateDesignations();
+    </script>
+</body>
+</html>
