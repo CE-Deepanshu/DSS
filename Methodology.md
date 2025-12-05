@@ -1,4 +1,6 @@
-# Working Stress Method (WSM) vs. Limit State Method (LSM) in Steel Design (IS Codes)
+# 🌉 Design of Steel Structures (IS 800:2007)
+
+# DESIGN METHODOLOGIES
 
 ## 1. Working Stress Method (WSM)
 
