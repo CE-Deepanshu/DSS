@@ -2,8 +2,8 @@
 
 **Creator:** **Deepanshu**  
 
-**Email:** deepanshurathore634@gmail.com
+[**Email:**](deepanshurathore634@gmail.com)
 
-**Location:** Ludhiana, Punjab, India  
+**Location: Ludhiana, Punjab, India** 
 
-**Academic Profile:** Student, B.Tech Civil Engineering, **Guru Nanak Dev Engineering College** (GNDEC), Ludhiana (2022–2026)
+**Academic Profile: Student, B.Tech Civil Engineering, Guru Nanak Dev Engineering College (GNDEC), Ludhiana (2022–2026)**
