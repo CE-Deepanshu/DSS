@@ -1,4 +1,4 @@
-# 🏗 Design of Steel Structures (IS 800:2007)
+# 🌉 Design of Steel Structures (IS 800:2007)
 
 **A systematic guide to steel design following Indian Standard codes, featuring step-by-step procedures, design aids, and computational tools.**
 
