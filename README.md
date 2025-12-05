@@ -14,4 +14,4 @@ A clear, structured reference website outlining the systematic design steps for 
 
 This AI-assisted guide is for educational reference only. The user is solely responsible for its application. Always verify designs with professional engineers and current IS codes.
 
-![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fce-deepanshu.github.io%2FRCC-Design.github.io%2F&label=VISITORS&labelColor=%23ADD8E6&countColor=%2337d67a&style=plastic&labelStyle=upper)
+![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fce-deepanshu.github.io%2FDSS%2F&label=VISITORS&labelColor=%23ADD8E6&countColor=%2337d67a&style=plastic&labelStyle=upper)
