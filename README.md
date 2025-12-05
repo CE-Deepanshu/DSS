@@ -2,7 +2,7 @@
 
 # DESIGN OF STEEL STRUCTURE
 
-### References: IS 800 : 2007 
+### Reference: IS 800 : 2007 
 
 |[**Methodology**](Methodology.md)|[**Content**](Content.md)|[**Contact**](Contact.md)|[**Steel Table**](ISST.html)|
 
